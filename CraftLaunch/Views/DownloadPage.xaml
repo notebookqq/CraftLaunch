@@ -1,0 +1,76 @@
+<UserControl x:Class="CraftLaunch.Views.DownloadPage"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:vm="clr-namespace:CraftLaunch.ViewModels"
+             xmlns:views="clr-namespace:CraftLaunch.Views"
+             xmlns:controls="clr-namespace:CraftLaunch.Controls"
+             mc:Ignorable="d" d:DesignHeight="620" d:DesignWidth="660">
+    <UserControl.Resources>
+        <Style x:Key="DownloadTabList" TargetType="ListBox">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="ItemsPanel">
+                <Setter.Value>
+                    <ItemsPanelTemplate>
+                        <StackPanel Orientation="Horizontal"/>
+                    </ItemsPanelTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style x:Key="DownloadTabItem" TargetType="ListBoxItem">
+            <Setter Property="Foreground" Value="{DynamicResource TextSecondaryBrush}"/>
+            <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ListBoxItem">
+                        <Border Margin="0,0,28,0" Background="Transparent">
+                            <StackPanel>
+                                <TextBlock Text="{Binding}" FontSize="14" FontWeight="SemiBold" VerticalAlignment="Center"/>
+                                <Rectangle x:Name="Line" Height="3" RadiusX="1.5" RadiusY="1.5" Margin="0,6,0,0"
+                                           Fill="{DynamicResource AccentBrush}" Visibility="Collapsed"/>
+                            </StackPanel>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}"/>
+                            </Trigger>
+                            <Trigger Property="IsSelected" Value="True">
+                                <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}"/>
+                                <Setter TargetName="Line" Property="Visibility" Value="Visible"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <DataTemplate DataType="{x:Type vm:VersionDownloadViewModel}">
+            <views:VersionDownloadPage/>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type vm:ContentDownloadViewModel}">
+            <views:ContentDownloadPage/>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type vm:ModpackDownloadViewModel}">
+            <views:ModpackPage/>
+        </DataTemplate>
+    </UserControl.Resources>
+
+    <Grid Margin="32,10,32,20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <TextBlock Grid.Row="0" Text="下载" FontSize="26" FontWeight="SemiBold" Margin="0,8,0,0"
+                   Foreground="{DynamicResource TextPrimaryBrush}"/>
+
+        <ListBox Grid.Row="1" Style="{StaticResource DownloadTabList}" ItemContainerStyle="{StaticResource DownloadTabItem}"
+                 ItemsSource="{Binding Tabs}" SelectedIndex="{Binding SelectedTab, Mode=TwoWay}"
+                 Margin="0,14,0,0"/>
+
+        <controls:AnimatedContentControl Grid.Row="2" Content="{Binding Current}" Focusable="False" Margin="0,16,0,0"/>
+    </Grid>
+</UserControl>

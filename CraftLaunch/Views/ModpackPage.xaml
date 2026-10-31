@@ -1,0 +1,86 @@
+<UserControl x:Class="CraftLaunch.Views.ModpackPage"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             mc:Ignorable="d" d:DesignHeight="560" d:DesignWidth="640">
+    <Border Style="{StaticResource CardStyle}">
+        <StackPanel>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <TextBox Style="{StaticResource WinTextBox}"
+                         Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"/>
+                <Button Grid.Column="1" Style="{StaticResource AccentButton}" Content="搜索" Width="76" Margin="8,0,0,0"
+                        Command="{Binding SearchCommand}"/>
+            </Grid>
+
+            <StackPanel Orientation="Horizontal" Margin="0,12,0,0">
+                <TextBlock Text="游戏版本" VerticalAlignment="Center" FontSize="12"
+                           Foreground="{DynamicResource TextSecondaryBrush}"/>
+                <ComboBox Style="{StaticResource WinComboBox}" Width="150" Margin="8,0,0,0"
+                          ItemsSource="{Binding GameVersions}"
+                          SelectedItem="{Binding SelectedGameVersion}"/>
+                <TextBlock Text="加载器" VerticalAlignment="Center" FontSize="12" Margin="16,0,0,0"
+                           Foreground="{DynamicResource TextSecondaryBrush}"/>
+                <ComboBox Style="{StaticResource WinComboBox}" Width="110" Margin="8,0,0,0"
+                          ItemsSource="{Binding Loaders}"
+                          SelectedItem="{Binding SelectedLoader}"/>
+            </StackPanel>
+
+            <Border Margin="0,12,0,0" BorderBrush="{DynamicResource CardBorderBrush}" BorderThickness="1"
+                    CornerRadius="4" Background="{DynamicResource ControlFillBrush}" Padding="4"
+                    Height="190">
+                <ListBox Style="{StaticResource WinListBox}"
+                         ItemContainerStyle="{StaticResource WinListBoxItem}"
+                         ItemsSource="{Binding SearchResults}"
+                         SelectedItem="{Binding SelectedProject}"
+                         ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                         VirtualizingPanel.ScrollUnit="Pixel">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+                                <Grid Grid.Row="0">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Text="{Binding Title}" FontSize="13" FontWeight="SemiBold"
+                                               TextTrimming="CharacterEllipsis"
+                                               Foreground="{DynamicResource TextPrimaryBrush}"/>
+                                    <TextBlock Grid.Column="1" Text="{Binding DownloadsLabel, StringFormat=⬇ {0}}"
+                                               FontSize="12" Margin="12,0,0,0"
+                                               Foreground="{DynamicResource TextSecondaryBrush}"/>
+                                </Grid>
+                                <TextBlock Grid.Row="1" Text="{Binding Description}" FontSize="12" Margin="0,2,0,0"
+                                           TextTrimming="CharacterEllipsis"
+                                           Foreground="{DynamicResource TextSecondaryBrush}"/>
+                            </Grid>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+            </Border>
+
+            <StackPanel Orientation="Horizontal" Margin="0,12,0,0">
+                <Button Style="{StaticResource AccentButton}" Content="下载并安装" Width="132"
+                        Command="{Binding DownloadCommand}"/>
+                <ProgressBar Width="140" Margin="12,0,0,0" VerticalAlignment="Center" Maximum="100"
+                             Value="{Binding DownloadPercent, Mode=OneWay}"
+                             Visibility="{Binding IsDownloading, Converter={StaticResource BoolToVisibility}}"/>
+                <TextBlock Text="{Binding DownloadStatus}" VerticalAlignment="Center" Margin="14,0,0,0"
+                           FontSize="12" TextTrimming="CharacterEllipsis" MaxWidth="340"
+                           Foreground="{DynamicResource TextSecondaryBrush}"/>
+            </StackPanel>
+
+            <TextBlock Text="整合包（.mrpack）会解压到游戏目录并自动下载全部模组与配置文件，安装后需要在版本管理中确认已有对应的 Minecraft 版本。"
+                       FontSize="12" Margin="0,12,0,0" TextWrapping="Wrap"
+                       Foreground="{DynamicResource TextSecondaryBrush}"/>
+        </StackPanel>
+    </Border>
+</UserControl>

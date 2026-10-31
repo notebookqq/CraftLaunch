@@ -1,0 +1,30 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <SolidColorBrush x:Key="AccentBrush" Color="#FF4CC2FF"/>
+    <SolidColorBrush x:Key="AccentHoverBrush" Color="#FF66CCFF"/>
+    <SolidColorBrush x:Key="AccentPressedBrush" Color="#FF33A6E0"/>
+    <SolidColorBrush x:Key="AccentTextBrush" Color="#FF000000"/>
+
+    <SolidColorBrush x:Key="WindowBackgroundBrush" Color="#FF202020"/>
+    <SolidColorBrush x:Key="CardBackgroundBrush" Color="#FF2B2B2B"/>
+    <SolidColorBrush x:Key="CardBorderBrush" Color="#14FFFFFF"/>
+    <SolidColorBrush x:Key="ControlFillBrush" Color="#FF303030"/>
+    <SolidColorBrush x:Key="ControlBorderBrush" Color="#14FFFFFF"/>
+    <SolidColorBrush x:Key="SubtleHoverBrush" Color="#0FFFFFFF"/>
+    <SolidColorBrush x:Key="SubtlePressedBrush" Color="#14FFFFFF"/>
+    <SolidColorBrush x:Key="SubtleSelectedBrush" Color="#1AFFFFFF"/>
+    <SolidColorBrush x:Key="DividerBrush" Color="#12FFFFFF"/>
+    <SolidColorBrush x:Key="PopupBackgroundBrush" Color="#FF2C2C2C"/>
+    <SolidColorBrush x:Key="ScrollThumbBrush" Color="#59FFFFFF"/>
+    <SolidColorBrush x:Key="DangerBrush" Color="#FFFF7B72"/>
+    <SolidColorBrush x:Key="DangerHoverBrush" Color="#FFFF99A4"/>
+
+    <SolidColorBrush x:Key="TextPrimaryBrush" Color="#FFFFFFFF"/>
+    <SolidColorBrush x:Key="TextSecondaryBrush" Color="#B3FFFFFF"/>
+    <SolidColorBrush x:Key="TextDisabledBrush" Color="#5DFFFFFF"/>
+    <SolidColorBrush x:Key="CaptionForegroundBrush" Color="#FFFFFFFF"/>
+    <SolidColorBrush x:Key="CaptionCloseHoverBrush" Color="#FFC42B1C"/>
+    <SolidColorBrush x:Key="CaptionCloseHoverTextBrush" Color="#FFFFFFFF"/>
+
+</ResourceDictionary>
