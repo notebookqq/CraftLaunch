@@ -167,5 +167,37 @@ public partial class LaunchArgumentBuilder : ILaunchArgumentBuilder
             substitutions.TryGetValue(match.Groups[1].Value, out var value) ? value : "");
 
     private static string JoinArgs(IEnumerable<string> args)
-        => string.Join(' ', args.Select(a => a.Contains(' ') ? $"\"{a}\"" : a));
+        => string.Join(' ', args.Select(QuoteArg));
+
+    private static string QuoteArg(string arg)
+    {
+        if (!arg.Contains(' ') && !arg.Contains('"') && !arg.Contains('\t'))
+            return arg;
+
+        var sb = new StringBuilder(arg.Length + 16);
+        sb.Append('"');
+        var backslashes = 0;
+        foreach (var c in arg)
+        {
+            if (c == '\\')
+            {
+                backslashes++;
+            }
+            else if (c == '"')
+            {
+                sb.Append('\\', backslashes * 2 + 1);
+                sb.Append('"');
+                backslashes = 0;
+            }
+            else
+            {
+                sb.Append('\\', backslashes);
+                sb.Append(c);
+                backslashes = 0;
+            }
+        }
+        sb.Append('\\', backslashes * 2);
+        sb.Append('"');
+        return sb.ToString();
+    }
 }

@@ -257,7 +257,15 @@ public class VersionInstaller
             {
                 if (entry.FullName.EndsWith("/") || entry.FullName.StartsWith("META-INF"))
                     continue;
-                entry.ExtractToFile(Path.Combine(nativesDir, entry.Name), true);
+                try
+                {
+                    var target = PathGuard.SafeJoin(nativesDir, entry.Name);
+                    entry.ExtractToFile(target, true);
+                }
+                catch (IOException ex)
+                {
+                    LogManager.Instance.Warn($"跳过 natives 条目 {entry.FullName}: {ex.Message}");
+                }
             }
         }
     }
@@ -265,14 +273,14 @@ public class VersionInstaller
     private static List<(string Hash, long Size)> ParseAssetObjects(string indexPath)
     {
         using var doc = JsonDocument.Parse(File.ReadAllText(indexPath));
-        var result = new List<(string, long)>();
+        var result = new List<(string Hash, long Size)>();
 
         if (doc.RootElement.TryGetProperty("objects", out var objects) && objects.ValueKind == JsonValueKind.Object)
         {
             foreach (var obj in objects.EnumerateObject())
             {
                 var hash = obj.Value.GetProperty("hash").GetString();
-                if (string.IsNullOrEmpty(hash) || hash.Length != 40)
+                if (hash is null || !PathGuard.IsSha1Hex(hash))
                     continue;
                 var size = obj.Value.TryGetProperty("size", out var sizeElement) ? sizeElement.GetInt64() : 0;
                 result.Add((hash, size));

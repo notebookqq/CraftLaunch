@@ -172,7 +172,7 @@ public class ModpackDownloadViewModel : ViewModelBase
 
             var gameDir = ConfigService.Current.GameDirectory;
             var packDir = Path.Combine(gameDir, "modpacks");
-            var mrpackPath = Path.Combine(packDir, file.Filename);
+            var mrpackPath = Path.Combine(packDir, PathGuard.SanitizeFileName(file.Filename));
             await VersionInstaller.DownloadFileAsync(new DownloadItem
             {
                 Url = file.Url,

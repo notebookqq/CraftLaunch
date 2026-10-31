@@ -7,6 +7,9 @@ namespace CraftLaunch.Services;
 
 public class ModpackInstaller
 {
+    private const long MaxExtractBytes = 4L * 1024 * 1024 * 1024;
+    private const long MaxDownloadBytes = 8L * 1024 * 1024 * 1024;
+
     public async Task InstallAsync(string mrpackPath, string gameDirectory,
         IProgress<DownloadProgress>? progress, CancellationToken ct)
     {
@@ -28,12 +31,29 @@ public class ModpackInstaller
             .Where(e => e.FullName.StartsWith("overrides/") && e.Name.Length > 0)
             .ToList();
 
+        var overridesBytes = overrides.Sum(e => e.Length);
+        if (overridesBytes > MaxExtractBytes)
+            throw new InvalidOperationException($"整合包解压总量 {overridesBytes / 1073741824.0:0.#} GB 超过安全上限，疑似压缩炸弹，已中止");
+
+        var downloadBytes = index.Files.Sum(f => (long)f.Filesize);
+        if (downloadBytes > MaxDownloadBytes)
+            throw new InvalidOperationException($"整合包文件总量 {downloadBytes / 1073741824.0:0.#} GB 超过安全上限，疑似异常整合包，已中止");
+
         var extracted = 0;
         foreach (var entry in overrides)
         {
             ct.ThrowIfCancellationRequested();
-            var relative = entry.FullName["overrides/".Length..];
-            var destination = Path.Combine(gameDirectory, relative.Replace('/', Path.DirectorySeparatorChar));
+            string relative;
+            try
+            {
+                relative = PathGuard.SafeJoinRelative(gameDirectory, entry.FullName["overrides/".Length..]);
+            }
+            catch (IOException ex)
+            {
+                LogManager.Instance.Warn($"跳过整合包条目 {entry.FullName}: {ex.Message}");
+                continue;
+            }
+            var destination = Path.Combine(gameDirectory, relative);
             var destinationDir = Path.GetDirectoryName(destination);
             if (destinationDir is not null)
                 Directory.CreateDirectory(destinationDir);
@@ -43,17 +63,30 @@ public class ModpackInstaller
                 Report(progress, "安装覆盖文件", relative, extracted, overrides.Count);
         }
 
-        var items = index.Files
-            .Where(f => f.Downloads.Count > 0)
-            .Select(f => new DownloadItem
+        var items = new List<DownloadItem>();
+        foreach (var f in index.Files)
+        {
+            if (f.Downloads.Count == 0)
+                continue;
+            string destination;
+            try
+            {
+                destination = PathGuard.SafeJoin(gameDirectory, f.Path.Replace('/', Path.DirectorySeparatorChar));
+            }
+            catch (IOException ex)
+            {
+                LogManager.Instance.Warn($"跳过整合包文件 {f.Path}: {ex.Message}");
+                continue;
+            }
+            items.Add(new DownloadItem
             {
                 Url = f.Downloads[0],
-                Destination = Path.Combine(gameDirectory, f.Path.Replace('/', Path.DirectorySeparatorChar)),
+                Destination = destination,
                 Size = f.Filesize,
                 Sha1 = f.Hashes?.Sha1,
                 Display = f.Path
-            })
-            .ToList();
+            });
+        }
 
         await VersionInstaller.DownloadBatchAsync(items, "下载整合包文件", progress, ct);
         LogManager.Instance.Info($"整合包安装完成: {mrpackPath}");

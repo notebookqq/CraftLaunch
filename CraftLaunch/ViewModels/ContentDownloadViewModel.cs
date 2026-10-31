@@ -218,7 +218,7 @@ public class ContentDownloadViewModel : ViewModelBase
             var item = new DownloadItem
             {
                 Url = file.Url,
-                Destination = Path.Combine(targetDir, file.Filename),
+                Destination = Path.Combine(targetDir, PathGuard.SanitizeFileName(file.Filename)),
                 Size = file.Size,
                 Display = file.Filename
             };

@@ -27,7 +27,7 @@ public class ModrinthService
 
     public async Task<List<ModrinthVersion>> GetVersionsAsync(string projectId, CancellationToken ct)
     {
-        var json = await HttpService.Client.GetStringAsync($"{ApiBase}/project/{projectId}/version", ct);
+        var json = await HttpService.Client.GetStringAsync($"{ApiBase}/project/{Uri.EscapeDataString(projectId)}/version", ct);
         return JsonSerializer.Deserialize<List<ModrinthVersion>>(json) ?? new List<ModrinthVersion>();
     }
 }
