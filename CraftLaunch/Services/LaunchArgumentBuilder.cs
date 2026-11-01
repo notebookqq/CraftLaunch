@@ -1,4 +1,5 @@
 using System.IO;
+using System.Reflection;
 using System.Text;
 using System.Text.Json;
 using System.Text.RegularExpressions;
@@ -116,7 +117,7 @@ public partial class LaunchArgumentBuilder : ILaunchArgumentBuilder
             ["assets_index_name"] = version.AssetIndex?.Id ?? version.Assets ?? "legacy",
             ["natives_directory"] = nativesDir,
             ["launcher_name"] = "CraftLaunch",
-            ["launcher_version"] = "0.1.0",
+            ["launcher_version"] = Assembly.GetExecutingAssembly().GetName().Version?.ToString(3) ?? "0.1.0",
             ["classpath"] = string.Join(Path.PathSeparator, classpath),
             ["classpath_separator"] = Path.PathSeparator.ToString(),
             ["resolution_width"] = "1280",

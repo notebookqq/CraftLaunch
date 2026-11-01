@@ -9,6 +9,14 @@
     <RootNamespace>CraftLaunch</RootNamespace>
     <AssemblyName>CraftLaunch</AssemblyName>
     <ApplicationIcon>app.ico</ApplicationIcon>
+    <Version>0.1.2</Version>
+    <Product>CraftLaunch</Product>
+    <Company>笔记本说电脑</Company>
+    <Authors>笔记本说电脑</Authors>
+    <Copyright>© 2026 笔记本说电脑</Copyright>
+    <FileVersion>0.1.2</FileVersion>
+    <AssemblyVersion>0.1.2.0</AssemblyVersion>
+    <Description>Minecraft launcher built with native WPF and Fluent Design.</Description>
     <Version>0.1.0</Version>
     <Product>CraftLaunch</Product>
     <AssemblyTitle>CraftLaunch</AssemblyTitle>
@@ -18,6 +26,10 @@
 
   <ItemGroup>
     <Resource Include="app.ico"/>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Start.bat" CopyToOutputDirectory="PreserveNewest"/>
   </ItemGroup>
 
 </Project>
